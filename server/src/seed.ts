@@ -1,7 +1,9 @@
 import { faker } from '@faker-js/faker';
 import * as schema from '../../src/db/schema';
-import { drizzle } from "drizzle-orm/neon-http";
+import { database } from '../src/index';
 import { hashPassword } from './lib/auth';
+
+const db = database;
 
 /**
  * Using Faker.js for seeding because why not.
@@ -25,20 +27,19 @@ async function generateUser() {
 }
 
 // Function to generate a single book for a given owner
-function generateBook(ownerId : string){
+function generateBook(owner_id : string){
     const id = faker.string.uuid();
     const title = faker.book.title();
     const author = faker.book.author();
-    const isbnSring = faker.string.numeric({ length: 42, allowLeadingZeros: false });
-    const isbn = Number(isbnSring);
+    const isbn = faker.string.numeric({ length: 42, allowLeadingZeros: false });
     const description = faker.string.alphanumeric({ length: { min: 5, max: 100 } });
     const bookCondition = faker.helpers.arrayElement(schema.bookConditionEnum.enumValues);
     const coverImage = faker.internet.url();
     const price_per_day = faker.number.int();
     const maxRentalDays = faker.number.int();
-    const owner_id = ownerId;
+    const ownerId = owner_id;
 
-    return {title, author, isbn, description, bookCondition, coverImage, price_per_day, maxRentalDays, owner_id}
+    return {title, author, isbn, description, bookCondition, coverImage, price_per_day, maxRentalDays, ownerId}
 }
 
 function generateRentalTransactions(renterId: string, ownerId: string, bookId: string){
@@ -63,7 +64,7 @@ async function seed(){
     const dummyUsers = await Promise.all(userPromises);
 
     console.log('Generating books...');
-    const dummyBooks = [];
+    const dummyBooks: (typeof schema.books.$inferInsert)[] = [];
     dummyUsers.forEach((user) => {
         const numBooks = faker.number.int({min: 1, max: 5});
         for (let i = 0; i < numBooks; i++) {
@@ -72,13 +73,38 @@ async function seed(){
     })
 
     console.log('Generating rental transactions...');
-    // Call generateRentalTransaction 15 times.
+    const dummyRentals: (typeof schema.rentalTransactions.$inferInsert)[] = [];
+    const availBooks = dummyBooks.filter(book => book.status == "available");
+    
+    for (let i = 0; i < 15; i++) {
+        const randomBook = availBooks[i];
+        // Find a renter who is not the book's owner
+        const potentialRenters = dummyUsers.filter(user => user.id !== randomBook.ownerId);
+        const randomRenter = faker.helpers.arrayElement(potentialRenters);
+        if (randomBook.id == undefined) {
+            randomBook.id = "hardCoded";
+        }
+
+        dummyRentals.push(generateRentalTransactions(randomRenter.id, randomBook.ownerId, randomBook.id));
+    }
 
     console.log("Inserting users into database...");
-
+    await db.insert(schema.users).values(dummyUsers);
 
     console.log("Inserting books into database...");
-
+    await db.insert(schema.books).values(dummyBooks);
 
     console.log("Inserting rental transactions into database...");
+    await db.insert(schema.rentalTransactions).values(dummyRentals);
+
+    console.log('✅ Seed completed successfully!');
+    console.log(`📊 Created: ${dummyUsers.length} users, ${dummyBooks.length} books, ${dummyRentals.length} rentals.`);
 }
+
+seed().catch((err) => {
+    console.error("Seed failed!");
+    console.error(err);
+    process.exit(1);
+}).finally(() => {
+    process.exit(0);
+});

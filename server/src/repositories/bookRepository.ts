@@ -1,9 +1,8 @@
 import { eq } from 'drizzle-orm';
 import * as schema from '../../../src/db/schema';
-import { drizzle } from "drizzle-orm/neon-http";
+import { database } from '../index';
 
-const db = drizzle(process.env.DATABASE_URL!, {schema});
-
+const db = database;
 const books = schema.books;
 
 const getAllBooks = async () => {
