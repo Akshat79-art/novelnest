@@ -1,11 +1,12 @@
-import express from 'express'
+import express from 'express';
 import booksRouter from './routers/bookRouter';
 import * as schema from '../../src/db/schema';
 import { drizzle } from 'drizzle-orm/neon-http';
 
 const app = express();
 const port = process.env.PORT || 3001;
-export const database = drizzle(process.env.DATABASE_URL!, {schema});
+const db = drizzle(process.env.DATABASE_URL!, {schema});
+export const database = db;
 
 app.get('/', (req, res) => {
   res.send('Hello World!')

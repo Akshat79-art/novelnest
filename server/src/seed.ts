@@ -1,9 +1,12 @@
 import { faker } from '@faker-js/faker';
 import * as schema from '../../src/db/schema';
-import { database } from '../src/index';
 import { hashPassword } from './lib/auth';
+import * as dotenv from 'dotenv';
+import { drizzle } from 'drizzle-orm/neon-http';
 
-const db = database;
+dotenv.config();
+const connectionString = process.env.DATABASE_URL || "connection string";
+const db = drizzle(connectionString, {schema});
 
 /**
  * Using Faker.js for seeding because why not.
@@ -35,11 +38,11 @@ function generateBook(owner_id : string){
     const description = faker.string.alphanumeric({ length: { min: 5, max: 100 } });
     const bookCondition = faker.helpers.arrayElement(schema.bookConditionEnum.enumValues);
     const coverImage = faker.internet.url();
-    const price_per_day = faker.number.int();
-    const maxRentalDays = faker.number.int();
+    const price_per_day = faker.number.int({ min: 2, max: 50 });
+    const maxRentalDays = faker.number.int({ min: 2, max: 30 });
     const ownerId = owner_id;
 
-    return {title, author, isbn, description, bookCondition, coverImage, price_per_day, maxRentalDays, ownerId}
+    return {id, title, author, isbn, description, bookCondition, coverImage, price_per_day, maxRentalDays, ownerId}
 }
 
 function generateRentalTransactions(renterId: string, ownerId: string, bookId: string){
@@ -74,10 +77,9 @@ async function seed(){
 
     console.log('Generating rental transactions...');
     const dummyRentals: (typeof schema.rentalTransactions.$inferInsert)[] = [];
-    const availBooks = dummyBooks.filter(book => book.status == "available");
-    
+
     for (let i = 0; i < 15; i++) {
-        const randomBook = availBooks[i];
+        const randomBook = dummyBooks[i];
         // Find a renter who is not the book's owner
         const potentialRenters = dummyUsers.filter(user => user.id !== randomBook.ownerId);
         const randomRenter = faker.helpers.arrayElement(potentialRenters);
@@ -97,8 +99,8 @@ async function seed(){
     console.log("Inserting rental transactions into database...");
     await db.insert(schema.rentalTransactions).values(dummyRentals);
 
-    console.log('✅ Seed completed successfully!');
-    console.log(`📊 Created: ${dummyUsers.length} users, ${dummyBooks.length} books, ${dummyRentals.length} rentals.`);
+    console.log('Seed completed successfully!');
+    console.log(`Created: ${dummyUsers.length} users, ${dummyBooks.length} books, ${dummyRentals.length} rentals.`);
 }
 
 seed().catch((err) => {

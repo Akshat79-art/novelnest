@@ -8,8 +8,14 @@
     "build": "npm build",
     "start": "node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed": "ts-node src/seed.ts"
+    "seed": "tsx src/seed.ts"
   },
   "author": "Akshat",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "tsx": "^4.20.5"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.2"
+  }
 }
