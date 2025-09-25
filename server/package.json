@@ -8,7 +8,8 @@
     "build": "npm build",
     "start": "node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "seed": "tsx src/seed.ts"
+    "seed": "tsx src/seed.ts",
+    "generate-ba-cli": "npx @better-auth/cli generate"
   },
   "author": "Akshat",
   "license": "ISC",
@@ -19,6 +20,9 @@
     "bcrypt": "^6.0.0",
     "better-auth": "^1.3.17",
     "dotenv": "^17.2.2",
-    "jsonwebtoken": "^9.0.2"
+    "drizzle-orm": "^0.44.5",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.3"
   }
 }
