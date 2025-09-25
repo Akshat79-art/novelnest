@@ -4,6 +4,8 @@ import userRouter from './routers/userRouter';
 import * as schema from '../../src/db/schema';
 import * as dotenv from 'dotenv';
 import { drizzle } from 'drizzle-orm/neon-http';
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./lib/auth";
 
 dotenv.config();
 const app = express();
@@ -15,6 +17,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 });
 
+app.all("/api/auth/*", toNodeHandler(auth));
 app.use('/api/books', booksRouter);
 app.use('api/user', userRouter);
 

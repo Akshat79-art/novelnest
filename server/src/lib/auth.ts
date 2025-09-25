@@ -1,6 +1,18 @@
 import bcrypt from 'bcrypt';
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { database } from '../index';
 
 export const hashPassword = async (password: string): Promise<string> => {
   const saltRounds = 10;
   return await bcrypt.hash(password, saltRounds);
 };
+
+export const auth = betterAuth({
+  database: drizzleAdapter(database, {
+    provider: "pg",
+  }),
+  emailAndPassword: { 
+    enabled: true, 
+  },
+})
