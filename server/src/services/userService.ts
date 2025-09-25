@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 // import jwt from 'jsonwebtoken';
-import * as schema from '../../../src/db/schema';
+import * as schema from '../../db/schema';
 import * as dotenv from 'dotenv';
 import { userRepository } from '../repositories/userRepository';
 

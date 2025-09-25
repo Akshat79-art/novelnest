@@ -1,5 +1,5 @@
 import { database } from '../index';
-import * as schema from '../../../src/db/schema';
+import * as schema from '../../db/schema';
 import { eq } from 'drizzle-orm';
 
 const db = database;

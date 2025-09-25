@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import * as schema from '../../src/db/schema';
+import * as schema from '../db/schema';
 import { hashPassword } from './lib/auth';
 import * as dotenv from 'dotenv';
 import { drizzle } from 'drizzle-orm/neon-http';

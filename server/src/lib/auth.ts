@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { database } from '../index';
+import { openAPI } from "better-auth/plugins"
 
 export const hashPassword = async (password: string): Promise<string> => {
   const saltRounds = 10;
@@ -15,4 +16,7 @@ export const auth = betterAuth({
   emailAndPassword: { 
     enabled: true, 
   },
+  plugins: [ 
+    openAPI(), 
+  ] 
 })
