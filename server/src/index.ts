@@ -15,7 +15,6 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 });
 
-console.log("Auth:", auth);
 app.all("/api/auth/{*any}", toNodeHandler(auth));
 app.use("/api/books", bookRouter);
 app.use('api/user', userRouter);

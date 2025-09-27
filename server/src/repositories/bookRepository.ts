@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import * as schema from '../../db/schema';
-import { database } from '../index';
+import { database } from '../db';
 
 const db = database;
 const books = schema.books;
