@@ -1,15 +1,20 @@
 import { Request, Response } from 'express';
 import { userService } from "../services/userService";
 
-const registerUser = async (req: Request, res: Response) => {
+const registerUserController = async (req: Request, res: Response) => {
     try {
-      const { user, token } = await userService.registerUser(req.body);
-      res.status(201).json({ user, token });
+      const { email, password, name } = req.body;
+      const result = await userService.registerUserService({email, password, name});
+      res.status(201).json({
+        message: 'User registered successfully',
+        user: result
+      });
     } catch (error: any) {
-      res.status(400).json({ message: error.message });
+      console.error('Registration error:', error);
+      res.status(400).json({ message: error.message || 'Registration failed' });
     }
 }
 
 export const userController = {
-    registerUser
+  registerUserController
 };

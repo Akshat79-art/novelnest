@@ -1,32 +1,51 @@
-import bcrypt from 'bcrypt';
-// import jwt from 'jsonwebtoken';
+import { user, account } from '../../auth-schema';
 import * as schema from '../../db/schema';
 import * as dotenv from 'dotenv';
 import { userRepository } from '../repositories/userRepository';
+import { auth } from '../lib/auth';
+import { APIError } from "better-auth/api";
 
 dotenv.config();
-const users = schema.users;
-const JWT_SECRET = process.env.JWT_SECRET!;
+const users = user;
 
-const registerUser = async(userData: typeof users.$inferInsert) => {
-    const existingUser = await userRepository.findUserByEmail(userData.email);
-    if (existingUser) {
-      throw new Error('User already exists');
+const registerUserService = async(userData: {
+    email: string;
+    password: string;
+    name: string;
+  }) => {
+
+    try {
+      // Remeber to add a callback url.
+      const result = await auth.api.signUpEmail({
+        body: {
+          name: userData.name,
+          email: userData.email,
+          password: userData.password
+        }
+      });
+
+      console.log(result);
+      if (result.token == null) {
+        throw new Error('Authentication failed');
+      }
+
+      return {
+        id: result.user.id,
+        email: result.user.email,
+        name: result.user.name,
+      };
+
+    } catch (error) {
+      if (error instanceof APIError) {
+        console.error("Message:", error.message);
+        console.error("Possible Cause:", error.cause || "Not in docs.");
+      } else {
+        console.error("This error does not generate from Better Auth's functionality.")
+        console.error(error);
+      }
     }
-
-    const hashedPassword = await bcrypt.hash(userData.password, 10);
-
-    const newUser = await userRepository.registerUser({
-      ...userData,
-      password: hashedPassword,
-    });
-
-    const token = jwt.sign({ userId: newUser.id }, JWT_SECRET, { expiresIn: '7d' });
-
-    const { password, ...userWithoutPassword } = newUser;
-    return { user: userWithoutPassword, token };
 }
 
 export const userService = {
-    registerUser
+  registerUserService
 };

@@ -1,11 +1,13 @@
 import { database } from '../db';
 import * as schema from '../../db/schema';
+import { user, account } from '../../auth-schema';
 import { eq } from 'drizzle-orm';
 
 const db = database;
-const users = schema.users;
+const users = user;
+const userProfile = schema.userProfiles;
 
-const registerUser = async (userData: typeof users.$inferInsert) => {
+const collectInfoFromUser = async (userData: typeof users.$inferInsert) => {
     const [userRow] = await db.insert(users).values(userData).returning();
     return userRow;
 }
@@ -16,6 +18,6 @@ const findUserByEmail = async (email: string) => {
 }
 
 export const userRepository = {
-    registerUser,
+    collectInfoFromUser,
     findUserByEmail
 }
