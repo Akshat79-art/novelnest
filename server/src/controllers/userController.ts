@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { userService } from "../services/userService";
+import { CreateUserProfileDTO } from '../types/user';
 
 const registerUserController = async (req: Request, res: Response) => {
     try {
@@ -15,6 +16,24 @@ const registerUserController = async (req: Request, res: Response) => {
     }
 }
 
+const createProfile = async (req: Request, res: Response) => {
+    try {
+        const userId = req.user?.id || '';
+        const { phone, location } = req.body;
+        const userProfileData: CreateUserProfileDTO = { userId, phone, location};
+        const userProfile = userService.createUserProfile(userProfileData);
+
+        res.status(201).json({
+            message: 'User profile created successfully',
+            profile: userProfile
+        });
+  } catch (error: any) {
+        console.error(error);
+        res.status(400).json({ message: error.message || 'Registration failed' });
+  }
+}
+
 export const userController = {
-  registerUserController
+  registerUserController,
+  createProfile
 };

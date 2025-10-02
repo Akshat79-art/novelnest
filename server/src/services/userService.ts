@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import { userRepository } from '../repositories/userRepository';
 import { auth } from '../lib/auth';
 import { APIError } from "better-auth/api";
+import { CreateUserProfileDTO } from '../types/user';
 
 dotenv.config();
 const users = user;
@@ -46,6 +47,17 @@ const registerUserService = async(userData: {
     }
 }
 
+const createUserProfile = async (profileData: CreateUserProfileDTO) => {
+    const existingProfile = await userRepository.findUserProfileByUserId(profileData.userId);
+    if(existingProfile){
+        throw new Error('User profile already exists');
+    }
+
+    const userProfile = await userRepository.createUserProfile(profileData);
+    return userProfile;
+}
+
 export const userService = {
-  registerUserService
+    registerUserService,
+    createUserProfile
 };
