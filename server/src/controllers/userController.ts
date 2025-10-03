@@ -33,7 +33,20 @@ const createProfileController = async (req: Request, res: Response) => {
   }
 }
 
+const loginController = async (req: Request, res: Response) => {
+    try {
+        const { email, password } = req.body;
+        const signInData = { email, password }
+        const result = await userService.signInUserService(signInData);
+        return result;
+    } catch (error : any) {
+        console.error(error);
+        res.status(400).json({ message: error.message || 'Sign In failed' });
+    }
+}
+
 export const userController = {
   registerUserController,
-  createProfileController
+  createProfileController,
+  loginController
 };

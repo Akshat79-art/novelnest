@@ -6,7 +6,7 @@ const userRouter = Router();
 
 userRouter.post('/register', userController.registerUserController);
 userRouter.post('/complete-profile', requireAuth, requireCompleteProfile, userController.createProfileController);
-userRouter.post('/login');
+userRouter.post('/login', userController.loginController);
 // userRouter.get('/me', requireAuth, userController.getProfile);
 // userRouter.put('/me', requireAuth, userController.updateProfile);
 // userRouter.delete('/me', requireAuth, userController.deleteProfile);

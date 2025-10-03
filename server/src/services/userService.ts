@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import { userRepository } from '../repositories/userRepository';
 import { auth } from '../lib/auth';
 import { APIError } from "better-auth/api";
-import { CreateUserProfileDTO } from '../types/user';
+import { CreateUserProfileDTO, SignInUserDTO } from '../types/user';
 
 dotenv.config();
 const users = user;
@@ -57,7 +57,30 @@ const createUserProfileService = async (profileData: CreateUserProfileDTO) => {
     return userProfile;
 }
 
+const signInUserService = async ( signInData: SignInUserDTO) => {
+    try {
+        const response = await auth.api.signInEmail({
+            body: {
+                email: signInData.email,
+                password: signInData.password
+            },
+            asResponse: true
+        })
+        return response;
+    } catch (error) {
+        if (error instanceof APIError) {
+            console.error("Message:", error.message);
+            console.error("Possible Cause:", error.cause || "Not in docs.");
+        } else {
+            console.error("This error does not generate from Better Auth's functionality.")
+            console.error(error);
+        }
+    }
+}
+
+
 export const userService = {
     registerUserService,
-    createUserProfileService
+    createUserProfileService,
+    signInUserService
 };

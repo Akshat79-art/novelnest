@@ -3,3 +3,8 @@ export interface CreateUserProfileDTO {
     phone: string;
     location: string;
 }
+
+export interface SignInUserDTO {
+    email: string,
+    password: string
+}
