@@ -47,7 +47,7 @@ const registerUserService = async(userData: {
     }
 }
 
-const createUserProfile = async (profileData: CreateUserProfileDTO) => {
+const createUserProfileService = async (profileData: CreateUserProfileDTO) => {
     const existingProfile = await userRepository.findUserProfileByUserId(profileData.userId);
     if(existingProfile){
         throw new Error('User profile already exists');
@@ -59,5 +59,5 @@ const createUserProfile = async (profileData: CreateUserProfileDTO) => {
 
 export const userService = {
     registerUserService,
-    createUserProfile
+    createUserProfileService
 };

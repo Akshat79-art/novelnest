@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { userController } from "../controllers/userController";
-import { requireAuth } from "../lib/middleware";
+import { requireAuth, requireCompleteProfile } from "../lib/middleware";
 
 const userRouter = Router();
 
 userRouter.post('/register', userController.registerUserController);
-userRouter.post('/complete-profile', requireAuth, userController.createProfile);
+userRouter.post('/complete-profile', requireAuth, requireCompleteProfile, userController.createProfileController);
 userRouter.post('/login');
 // userRouter.get('/me', requireAuth, userController.getProfile);
 // userRouter.put('/me', requireAuth, userController.updateProfile);

@@ -16,12 +16,12 @@ const registerUserController = async (req: Request, res: Response) => {
     }
 }
 
-const createProfile = async (req: Request, res: Response) => {
+const createProfileController = async (req: Request, res: Response) => {
     try {
         const userId = req.user?.id || '';
         const { phone, location } = req.body;
         const userProfileData: CreateUserProfileDTO = { userId, phone, location};
-        const userProfile = userService.createUserProfile(userProfileData);
+        const userProfile = userService.createUserProfileService(userProfileData);
 
         res.status(201).json({
             message: 'User profile created successfully',
@@ -35,5 +35,5 @@ const createProfile = async (req: Request, res: Response) => {
 
 export const userController = {
   registerUserController,
-  createProfile
+  createProfileController
 };
