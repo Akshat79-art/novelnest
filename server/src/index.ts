@@ -6,6 +6,7 @@ import { auth } from './lib/auth';
 
 import userRouter from './routers/userRouter';
 import bookRouter from './routers/bookRouter';
+import rentalRouter from './routers/rentalRouter';
 
 dotenv.config();
 const app = express();
@@ -17,7 +18,8 @@ app.get('/', (req, res) => {
 
 app.all("/api/auth/{*any}", toNodeHandler(auth));
 app.use("/api/books", bookRouter);
-app.use('api/user', userRouter);
+app.use('/api/user', userRouter);
+app.use('/api/rental', rentalRouter);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)

@@ -11,12 +11,24 @@ const getAllBooks = async () => {
     return allBooks;
 }
 
+const getBookById = async (bookId: string) => {
+    const book = await db.select().from(books).where(eq(books.id, bookId));
+    return book;
+}
+
 const getBookByName = async (bookName: string) => {
     const book = await db.select().from(books).where(eq(books.title, bookName));
     return book;
 }
 
+const getBookByIsbn = async (isbn: string) => {
+    const book = await db.select().from(books).where(eq(books.isbn, isbn));
+    return book;
+}
+
 export const bookRepository = { 
     getAllBooks,
-    getBookByName
+    getBookById,
+    getBookByName,
+    getBookByIsbn
 };
