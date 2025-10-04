@@ -5,6 +5,8 @@ import { userRepository } from '../repositories/userRepository';
 import { auth } from '../lib/auth';
 import { APIError } from "better-auth/api";
 import { CreateUserProfileDTO, SignInUserDTO } from '../types/user';
+import { headers } from 'next/headers';
+import { success } from 'better-auth';
 
 dotenv.config();
 const users = user;
@@ -78,9 +80,23 @@ const signInUserService = async ( signInData: SignInUserDTO) => {
     }
 }
 
+const signOutService = async () => {
+    try {
+        const result = await auth.api.signOut({
+            headers: await headers(),
+        });
+        return result;
+
+    } catch (error) {
+        console.error(error);
+        const result = {success: "Error"};
+        return result;
+    }
+}
 
 export const userService = {
     registerUserService,
     createUserProfileService,
-    signInUserService
+    signInUserService,
+    signOutService
 };

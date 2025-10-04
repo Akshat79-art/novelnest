@@ -33,7 +33,7 @@ const createProfileController = async (req: Request, res: Response) => {
   }
 }
 
-const loginController = async (req: Request, res: Response) => {
+const signInController = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
         const signInData = { email, password }
@@ -45,8 +45,31 @@ const loginController = async (req: Request, res: Response) => {
     }
 }
 
+const signOutController = async (req: Request, res: Response) => {
+    try {
+        const result = await userService.signOutService();
+        res.statusCode = 500;
+        res.json('Server faced some issues in signing out.');
+        if(result.success == "Error" || result.success == false){
+            return res;
+        }
+        else if(result.success == true){
+            res.statusCode = 200;
+            res.json("Succesfully signed out.");
+            res.redirect("/login");
+            return res;
+        } else {
+            res.json("Critical issue in backend. Please check.");
+            return res;
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export const userController = {
   registerUserController,
   createProfileController,
-  loginController
+  signInController,
+  signOutController
 };
