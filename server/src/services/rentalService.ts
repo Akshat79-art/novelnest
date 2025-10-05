@@ -68,10 +68,28 @@ const booksRequestedByUserService = async (renterId: string) => {
     } catch (error: any){
         console.error("Error in service for books requested by user:");
         console.error(error);
+        return [{"Error": "Error in service for books requested by user."}];
+    }
+}
+
+const booksRequestedToUserService = async (ownerId: string) => {
+    try {
+        const rentals = await rentalRepository.booksRequestedToUser(ownerId);
+
+        return rentals.map(rental => ({
+            rentalT: rental.rental,
+            books: rental.books,
+            renter: [rental.renterName, rental.renterEmail, rental.renterLocation]
+        }))
+    } catch (error) {
+        console.error("Error in service for books requested to user:");
+        console.error(error);
+        return [{"Error": "Error in service for books requested by user."}];
     }
 }
 
 export const rentalService = {
     createRentalRequestForBookService,
-    booksRequestedByUserService
+    booksRequestedByUserService,
+    booksRequestedToUserService
 }

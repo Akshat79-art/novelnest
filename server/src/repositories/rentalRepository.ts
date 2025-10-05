@@ -39,8 +39,24 @@ const booksRequestedByUser = async (renterId: string) => {
     return booksRequested;
 }
 
+const booksRequestedToUser = async (ownerId: string) => {
+    const booksRequested = await db.select({
+        rental: rentalSchema,
+        books: bookSchema,
+        renterName: userSchema.name,
+        renterEmail: userSchema.email,
+        renterLocation: userProfileSchema.location
+    }).from(rentalSchema).where(eq(rentalSchema.ownerId, ownerId))
+    .leftJoin(bookSchema, eq(rentalSchema.bookId, bookSchema.id))
+    .leftJoin(userProfileSchema, eq(rentalSchema.ownerId, userProfileSchema.userId))
+    .orderBy(desc(rentalSchema.createdAt));
+
+    return booksRequested;
+}
+
 export const rentalRepository = {
     createRentalRequest,
     findPendingRequestForBook,
-    booksRequestedByUser
+    booksRequestedByUser,
+    booksRequestedToUser
 };
