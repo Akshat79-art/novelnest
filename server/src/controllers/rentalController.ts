@@ -41,6 +41,18 @@ const createRequestForBookController = async(req: Request, res: Response) => {
     }
 }
 
+const booksRequestedByUserController = async (req: Request, res: Response) => {
+    try {
+        const renterId = (req as any).user.id;
+        const booksRequested = await rentalService.booksRequestedByUserService(renterId);
+        return booksRequested;
+    } catch (error: any) {
+        console.error('Error in fetching books requested by user controller.', error);
+        res.status(500).json({error: 'Failed to fetch incoming requests'});
+    }
+}
+
 export const rentalController = {
-    createRequestForBookController
+    createRequestForBookController,
+    booksRequestedByUserController
 };

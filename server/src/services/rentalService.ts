@@ -55,7 +55,23 @@ const createRentalRequestForBookService = async (requestData: CreateRentalReques
         return [{error: "Something went wrong in service layer."}];
     }
 }
+ 
+const booksRequestedByUserService = async (renterId: string) => {
+    try{
+        const rentals = await rentalRepository.booksRequestedByUser(renterId);
+
+        return rentals.map(rental => ({
+            rentalT: rental.rental,
+            books: rental.books,
+            owner: [rental.ownerName, rental.ownerEmail, rental.ownerLocation]
+        }))
+    } catch (error: any){
+        console.error("Error in service for books requested by user:");
+        console.error(error);
+    }
+}
 
 export const rentalService = {
-    createRentalRequestForBookService
+    createRentalRequestForBookService,
+    booksRequestedByUserService
 }
