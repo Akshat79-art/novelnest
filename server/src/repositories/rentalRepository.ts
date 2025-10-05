@@ -1,6 +1,6 @@
 import { database } from "../db";
 import * as schema from '../../db/schema';
-import { CreateRentalRequestDTO, PendingReqDTO } from "../types/rentals";
+import { CreateRentalRequestDTO, PendingReqDTO, UpdateRentalStatusDTO } from "../types/rentals";
 import { and, desc, eq } from "drizzle-orm";
 import { user } from "../../auth-schema";
 
@@ -54,9 +54,25 @@ const booksRequestedToUser = async (ownerId: string) => {
     return booksRequested;
 }
 
+const findRentalReqById = async (transactionId: string) => {
+    const transaction = await db.select().from(rentalSchema)
+                                .where(eq(rentalSchema.id, transactionId));
+    return transaction;
+}
+
+const updateRentalStatus = async (rentalStatusData: UpdateRentalStatusDTO) => {
+    const updatedRentalStatus = await db.update(rentalSchema)
+                                        .set({rentalStatus: rentalStatusData.newRentalStatus})
+                                        .where(eq(rentalSchema.id, rentalStatusData.transactionId))
+                                        .returning();
+    return updatedRentalStatus;
+} 
+
 export const rentalRepository = {
     createRentalRequest,
     findPendingRequestForBook,
     booksRequestedByUser,
-    booksRequestedToUser
+    booksRequestedToUser,
+    findRentalReqById,
+    updateRentalStatus
 };

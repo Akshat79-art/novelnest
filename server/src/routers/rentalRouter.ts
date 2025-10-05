@@ -7,7 +7,7 @@ const rentalRouter = Router();
 rentalRouter.post('/:bookId/request', rentalController.createRequestForBookController);
 rentalRouter.get('/booksRequestedByUser', rentalController.booksRequestedByUserController);
 rentalRouter.get('/booksRequestedToUser', rentalController.booksRequestedToUserController);
-// rentalRouter.patch('/:id/approve', rentalController.approveRental);
+rentalRouter.patch('/:transactionId/approve', rentalController.approveTransactionController);
 // rentalRouter.patch('/:id/reject', rentalController.rejectRental);
 // rentalRouter.patch('/:id/complete', rentalController.completeRental);
 

@@ -1,6 +1,7 @@
 import { eq } from 'drizzle-orm';
 import * as schema from '../../db/schema';
 import { database } from '../db';
+import { BookUpdateDTO } from '../types/book';
 
 const db = database;
 const books = schema.books;
@@ -26,9 +27,17 @@ const getBookByIsbn = async (isbn: string) => {
     return book;
 }
 
+const updateBookStatus = async (bookUpdateData: BookUpdateDTO) => {
+    const updatedBook = await db.update(books).set({status: bookUpdateData.newBookStatus})
+                                .where(eq(books.id, bookUpdateData.bookId))
+                                .returning();
+    return updatedBook;
+}
+
 export const bookRepository = { 
     getAllBooks,
     getBookById,
     getBookByName,
-    getBookByIsbn
+    getBookByIsbn,
+    updateBookStatus
 };

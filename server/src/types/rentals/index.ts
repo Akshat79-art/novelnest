@@ -17,4 +17,14 @@ export interface CreateRentalRequestDTO {
 export interface PendingReqDTO {
     bookId: string,
     renterId: string
-}
+};
+
+export interface TransactionDataDTO{
+    transactionId: string,
+    ownerId: string
+};
+
+export interface UpdateRentalStatusDTO{
+    transactionId: string,
+    newRentalStatus: 'pending' | 'approved' | 'rejected' | 'active' | 'completed' | 'cancelled'
+};

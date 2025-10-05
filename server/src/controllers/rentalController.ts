@@ -63,8 +63,36 @@ const booksRequestedToUserController = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Make the return value more concise.
+ * @param req 
+ * @param res 
+ * @returns 
+ */
+const approveTransactionController = async (req: Request, res: Response) => {
+    try {
+        const transactionId = req.params.transactionId;
+        const ownerId = (req as any).user.id;
+        const approvedRental = await rentalService.approveTransactionService({transactionId, ownerId});
+
+        res.json({
+            message: 'Rental request approved successfully',
+            rental: approvedRental
+        })
+    } catch (error: any) {
+        console.error('Error in approving transaction requested to controller.', error);
+        if (error.message.includes('not found') || 
+            error.message.includes('Only the book owner') ||
+            error.message.includes('Cannot approve')){
+            return res.status(400).json({ error: error.message });
+        }
+        res.status(500).json({error: 'Failed to approve incoming requests'});
+    }
+}
+
 export const rentalController = {
     createRequestForBookController,
     booksRequestedByUserController,
-    booksRequestedToUserController
+    booksRequestedToUserController,
+    approveTransactionController
 };
