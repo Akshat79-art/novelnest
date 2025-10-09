@@ -90,9 +90,31 @@ const approveTransactionController = async (req: Request, res: Response) => {
     }
 }
 
+const rejectTransactionController = async (req: Request, res: Response) => {
+    try {
+        const transactionId = req.params.transactionId;
+        const ownerId = (req as any).user.id;
+        const rejectRental = await rentalService.rejectTransactionService({transactionId, ownerId});
+
+        res.json({
+            message: 'Rental request rejected successfully',
+            rental: rejectRental
+        })
+    } catch (error: any) {
+        console.error('Error in rejecting transaction requested to controller.', error);
+        if (error.message.includes('not found') || 
+            error.message.includes('Only the book owner') ||
+            error.message.includes('Cannot reject')){
+            return res.status(400).json({ error: error.message });
+        }
+        res.status(500).json({error: 'Failed to reject rental request.'});
+    }
+}
+
 export const rentalController = {
     createRequestForBookController,
     booksRequestedByUserController,
     booksRequestedToUserController,
-    approveTransactionController
+    approveTransactionController,
+    rejectTransactionController,
 };

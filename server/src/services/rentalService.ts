@@ -121,9 +121,41 @@ const approveTransactionService = async(transactionData: TransactionDataDTO) => 
     }
 }
 
+const rejectTransactionService = async (transactionData: TransactionDataDTO) => {
+    try {
+        const transactionId = transactionData.transactionId;
+        const transactionRow = await rentalRepository.findRentalReqById(transactionId);
+
+        if (transactionRow.length == 0) {
+            throw new Error('Rental request not found.');
+        }
+        
+        const [transaction] = transactionRow;
+        if(transaction.ownerId != transactionData.ownerId){
+            throw new Error('Only the book owner can approve rental requests');
+        }
+        if(transaction.rentalStatus != 'pending'){
+            throw new Error(`Cannot approve rental with status ${transaction.rentalStatus}`)
+        }
+
+        const updateTransactionData = {transactionId, newRentalStatus: "rejected"} as UpdateRentalStatusDTO;
+        const [updatedTransaction] = await rentalRepository.updateRentalStatus(updateTransactionData);
+        const bookId = transaction.bookId;
+        const updateBookData = {bookId, newBookStatus: "rented"} as BookUpdateDTO;
+        const [updateBook] = await bookRepository.updateBookStatus(updateBookData);
+
+        return updatedTransaction;
+    } catch (error) {
+        console.error("Error in service for books requested to user:");
+        console.error(error);
+        return {"Error": error};
+    }
+}
+
 export const rentalService = {
     createRentalRequestForBookService,
     booksRequestedByUserService,
     booksRequestedToUserService,
-    approveTransactionService
+    approveTransactionService,
+    rejectTransactionService,
 }
