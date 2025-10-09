@@ -1,6 +1,6 @@
 import { database } from "../db";
 import * as schema from '../../db/schema';
-import { CreateRentalRequestDTO, PendingReqDTO, UpdateRentalStatusDTO } from "../types/rentals";
+import { CompleteTransactionDataDTO, CreateRentalRequestDTO, PendingReqDTO, UpdateRentalStatusDTO } from "../types/rentals";
 import { and, desc, eq } from "drizzle-orm";
 import { user } from "../../auth-schema";
 
@@ -66,7 +66,17 @@ const updateRentalStatus = async (rentalStatusData: UpdateRentalStatusDTO) => {
                                         .where(eq(rentalSchema.id, rentalStatusData.transactionId))
                                         .returning();
     return updatedRentalStatus;
-} 
+}
+
+const completeRental = async (completeTransactionData: CompleteTransactionDataDTO) => {
+    const completedRental = await db.update(rentalSchema).set({
+        rentalStatus: 'completed',
+        ownerRating: completeTransactionData.ratings.ownerRating,
+        renterRating: completeTransactionData.ratings.renterRating
+    }).where(eq(rentalSchema.id, completeTransactionData.transactionId)).returning();
+
+    return completedRental;
+}
 
 export const rentalRepository = {
     createRentalRequest,
@@ -74,5 +84,6 @@ export const rentalRepository = {
     booksRequestedByUser,
     booksRequestedToUser,
     findRentalReqById,
-    updateRentalStatus
+    updateRentalStatus,
+    completeRental
 };

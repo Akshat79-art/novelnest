@@ -1,7 +1,7 @@
 import { bookRepository } from "../repositories/bookRepository"
 import { rentalRepository } from "../repositories/rentalRepository";
 import { BookUpdateDTO } from "../types/book";
-import { CreateRentalRequestCtoSDTO, TransactionDataDTO, UpdateRentalStatusDTO } from "../types/rentals"
+import { CompleteTransactionDataDTO, CreateRentalRequestCtoSDTO, TransactionDataDTO, UpdateRentalStatusDTO } from "../types/rentals"
 
 /**
  * Make the return value more resourceful.
@@ -152,10 +152,49 @@ const rejectTransactionService = async (transactionData: TransactionDataDTO) => 
     }
 }
 
+const completeTransactionService = async (completeTransactionData: CompleteTransactionDataDTO) => {
+    try{
+        const transactionId = completeTransactionData.transactionId;
+        const transactionRow = await rentalRepository.findRentalReqById(transactionId);
+
+        if (transactionRow.length == 0) {
+            throw new Error('Rental request not found.');
+        }
+            
+        const [transaction] = transactionRow;
+        if(transaction.ownerId != completeTransactionData.ownerId){
+            throw new Error('Only the book owner can approve rental requests');
+        }
+        if(transaction.rentalStatus == 'pending' || transaction.rentalStatus == 'rejected'){
+            throw new Error(`Cannot approve rental with status ${transaction.rentalStatus}`)
+        }
+
+        const ratings = completeTransactionData.ratings;
+        if (ratings.ownerRating < 1 || ratings.ownerRating > 5) {
+            throw new Error('Owner rating must be between 1 and 5');
+        }
+        if (ratings.renterRating < 1 || ratings.renterRating > 5) {
+            throw new Error('Renter rating must be between 1 and 5');
+        }
+
+        const [completedRental] = await rentalRepository.completeRental(completeTransactionData);
+        const bookId = transaction.bookId;
+        const updateBookData = {bookId, newBookStatus: "available"} as BookUpdateDTO;
+        const [updateBook] = await bookRepository.updateBookStatus(updateBookData);
+
+        return completedRental;
+    } catch(error) {
+        console.error("Error in service for books requested to user:");
+        console.error(error);
+        return {"Error": error};
+    }
+}
+
 export const rentalService = {
     createRentalRequestForBookService,
     booksRequestedByUserService,
     booksRequestedToUserService,
     approveTransactionService,
     rejectTransactionService,
+    completeTransactionService
 }

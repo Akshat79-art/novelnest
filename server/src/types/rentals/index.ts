@@ -28,3 +28,12 @@ export interface UpdateRentalStatusDTO{
     transactionId: string,
     newRentalStatus: 'pending' | 'approved' | 'rejected' | 'active' | 'completed' | 'cancelled'
 };
+
+export interface CompleteTransactionDataDTO{
+    transactionId: string,
+    ownerId: string,
+    ratings: {
+        ownerRating: number,
+        renterRating: number
+    }
+}

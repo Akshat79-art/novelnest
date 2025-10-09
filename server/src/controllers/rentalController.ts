@@ -111,10 +111,39 @@ const rejectTransactionController = async (req: Request, res: Response) => {
     }
 }
 
+const completeTransactionController = async (req: Request, res: Response) => {
+    try {
+        const transactionId = req.params.transactionId;
+        const ownerId = (req as any).user.id;
+        const ownerRating = Number(req.params.ownerRating);
+        const renterRating = Number(req.params.renterRating);
+        const completeTransaction = await rentalService.completeTransactionService({
+            transactionId, 
+            ownerId,
+            ratings: { ownerRating, renterRating}
+        });
+
+        res.json({
+            message: 'Rental request rejected successfully',
+            rental: completeTransaction
+        })
+    } catch (error: any) {
+        console.error('Error in completing transaction requested to controller.', error);
+        if (error.message.includes('not found') || error.message.includes('Only the book owner') ||
+            error.message.includes('Cannot complete') || 
+            error.message.includes('rating must be between'))
+        {
+            return res.status(400).json({ error: error.message });
+        }
+        res.status(500).json({error: 'Failed to complete rental request.'});
+    }
+}
+
 export const rentalController = {
     createRequestForBookController,
     booksRequestedByUserController,
     booksRequestedToUserController,
     approveTransactionController,
     rejectTransactionController,
+    completeTransactionController
 };
