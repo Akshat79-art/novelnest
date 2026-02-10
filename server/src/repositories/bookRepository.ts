@@ -28,13 +28,13 @@ const getBookByIsbn = async (isbn: string) => {
 }
 
 const updateBookStatus = async (bookUpdateData: BookUpdateDTO) => {
-    const updatedBook = await db.update(books).set({status: bookUpdateData.newBookStatus})
-                                .where(eq(books.id, bookUpdateData.bookId))
-                                .returning();
+    const updatedBook = await db.update(books).set({ status: bookUpdateData.newBookStatus })
+        .where(eq(books.id, bookUpdateData.bookId))
+        .returning();
     return updatedBook;
 }
 
-export const bookRepository = { 
+export const bookRepository = {
     getAllBooks,
     getBookById,
     getBookByName,
