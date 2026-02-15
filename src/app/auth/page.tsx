@@ -1,8 +1,31 @@
 'use client';
 
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth';
 import Link from 'next/link';
 
 export default function AuthPage() {
+
+    const router = useRouter();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        console.log("Login attempt");
+        // If need a loading state, add it here.
+        const result = await authClient.signIn.email({
+            email,
+            password,
+            callbackURL: "/",
+        });
+        if (result.error) {
+            console.error(result.error);
+        } else {
+            router.push("/");
+        }
+    }
 
     return (
         <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4 font-sans selection:bg-amber-500/30">
@@ -36,13 +59,16 @@ export default function AuthPage() {
                     <div className="h-px flex-1 bg-gradient-to-r from-transparent via-amber-900/50 to-transparent"></div>
                 </div>
 
-                <form className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <form className="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300" onSubmit={handleLogin}>
                     <div>
                         <label className="block text-sm font-medium text-slate-300 mb-1.5">Email Address</label>
                         <input
                             type="email"
                             className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/50 transition-colors"
                             placeholder="you@example.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
                         />
                     </div>
                     <div>
@@ -51,6 +77,9 @@ export default function AuthPage() {
                             type="password"
                             className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/50 transition-colors"
                             placeholder="••••••••"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
                         />
                     </div>
                     <div className="flex items-center justify-end">
