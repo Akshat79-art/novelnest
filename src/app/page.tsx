@@ -7,10 +7,10 @@ export default function Home() {
             <nav className="flex items-center justify-between px-6 py-4 bg-slate-800/50 backdrop-blur-md border-b border-white/5 sticky top-0 z-50">
                 <div className="text-2xl font-bold text-amber-500 tracking-tight">NovelNest</div>
                 <div className="space-x-4">
-                    <Link href="/auth?view=login" className="px-4 py-2 text-sm font-medium text-slate-300 bg-slate-800/50 border border-slate-700 rounded-lg hover:border-amber-500/50 hover:text-amber-400 hover:scale-105 transition-all duration-300 backdrop-blur-sm">
+                    <Link href="/auth/login" className="px-4 py-2 text-sm font-medium text-slate-300 bg-slate-800/50 border border-slate-700 rounded-lg hover:border-amber-500/50 hover:text-amber-400 hover:scale-105 transition-all duration-300 backdrop-blur-sm">
                         Login
                     </Link>
-                    <Link href="/not-found" className="px-4 py-2 text-sm font-medium text-slate-900 bg-amber-500 rounded-lg hover:bg-amber-400 transition-all shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+                    <Link href="/auth/signup" className="px-4 py-2 text-sm font-medium text-slate-900 bg-amber-500 rounded-lg hover:bg-amber-400 transition-all shadow-[0_0_15px_rgba(245,158,11,0.3)]">
                         Sign Up
                     </Link>
                 </div>
