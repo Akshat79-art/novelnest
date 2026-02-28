@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link";
+import { authClient } from '@/lib/auth';
 import { useState } from "react";
 
 export default function Signup() {
@@ -12,15 +13,62 @@ export default function Signup() {
         password: "",
         confirmPassword: "",
         phone: "",
+        location: "",
     });
+
+    const getPasswordStrength = (password: string) => {
+        let score = 0;
+        let missingLabel = "";
+
+        if (!password) return 0;
+
+        if (password.length > 6) score += 1;
+        else missingLabel += "Length should be greater than 6";
+
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score += 1;
+        else missingLabel += "Both uppercase and lowercase letters should be present.";
+
+        if (/\d/.test(password)) score += 1;
+        else missingLabel += "At least one number should be present.";
+
+        if (/[^a-zA-Z\d]/.test(password)) score += 1;
+        else missingLabel += "At least one special character should be present.";
+
+        return score; // Returns 0-4
+    };
+
+    const strength = getPasswordStrength(formData.password);
+    const strengthLabels = ["Weak", "Fair", "Good", "Strong"];
+    const strengthColors = ["bg-red-500", "bg-orange-500", "bg-yellow-500", "bg-emerald-500"];
+
 
     const nextStep = () => setStep(s => s + 1);
     const prevStep = () => setStep(s => s - 1);
 
-    const handleSignUp = (e: React.FormEvent) => {
+    const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault();
         console.log("Sign Up attempt", formData);
-        // Add final submission (e.g., to BetterAuth) here
+
+        if (formData.password != formData.confirmPassword) {
+            alert("Passwords do not match");
+            return;
+        }
+
+        try {
+            const result = await authClient.signUp.email({
+                name: formData.name,
+                email: formData.email,
+                password: formData.password,
+            })
+            if (result.error) {
+                console.error(result.error);
+            } else {
+                nextStep();
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
 
     return (
@@ -119,6 +167,17 @@ export default function Signup() {
                                 placeholder="+1 234 567 890"
                                 value={formData.phone}
                                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-300 mb-1.5">Enter your address</label>
+                            <input
+                                type="text"
+                                className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/50 transition-colors"
+                                placeholder="9, Wakanda Street, Lagos"
+                                value={formData.location}
+                                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                                 required
                             />
                         </div>
