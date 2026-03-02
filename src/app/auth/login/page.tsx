@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import ForgotPassword from '../ForgotPassword';
+import ForgotPassword from '../forgotpass.tsx/page';
 
 export default function Login() {
 
@@ -27,7 +27,7 @@ export default function Login() {
         if (result.error) {
             console.error(result.error);
         } else {
-            router.push("/");
+            router.push("/dashboard");
         }
     }
 
@@ -93,7 +93,7 @@ export default function Login() {
                                 />
                             </div>
                             <div className="flex items-center justify-end">
-                                <Link href="/auth?view=ForgotPassword" className="text-sm text-amber-500 hover:text-amber-400 transition-colors">
+                                <Link href="/auth/forgotpass" className="text-sm text-amber-500 hover:text-amber-400 transition-colors">
                                     Forgot Password?
                                 </Link>
                             </div>
