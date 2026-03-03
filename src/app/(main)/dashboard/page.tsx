@@ -17,10 +17,9 @@ export default function Dashboard() {
 
     return (
         <div className="min-h-screen bg-slate-900 text-slate-100 flex font-sans">
-            <Sidebar />
 
             {/* Main Content */}
-            <main className="ml-64 flex-1 p-10">
+            <main className="flex-1 p-10">
                 {/* Search & Profile */}
                 <header className="flex items-center justify-between mb-12">
                     <div className="relative w-96 group">
@@ -47,16 +46,14 @@ export default function Dashboard() {
 
                 {/* Hero / Welcome */}
                 <section className="mb-12">
-                    <div className="bg-gradient-to-r from-amber-600/20 to-transparent border border-amber-500/10 rounded-3xl p-8 backdrop-blur-sm relative overflow-hidden">
+                    <div className="bg-gradient-to-r from-amber-500/40 to-transparent rounded-3xl p-8 backdrop-blur-sm relative overflow-hidden">
                         <div className="relative z-10">
                             <h2 className="text-3xl font-bold mb-2">Welcome back to the Nest! 🦉</h2>
-                            <p className="text-slate-400 max-w-lg mb-6 text-sm">You have 2 books due this week. Explore our newest arrivals in the fantasy section or continue your current read.</p>
+                            <p className="text-slate-200 max-w-lg mb-6 text-md">You have 2 books due this week. Explore our newest arrivals in the fantasy section or continue your current read.</p>
                             <button className="bg-amber-500 text-slate-900 px-6 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-amber-500/20 hover:scale-105 transition-transform">
                                 View Due Books
                             </button>
                         </div>
-                        {/* Decorative Book Shape */}
-                        <div className="absolute right-[-20px] top-[-20px] w-64 h-64 bg-amber-500/5 rounded-full blur-3xl"></div>
                     </div>
                 </section>
 
