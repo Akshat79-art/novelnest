@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Sidebar from '@/components/layout/sidebar';
 
 export default function Dashboard() {
 
@@ -39,7 +38,9 @@ export default function Dashboard() {
                             <p className="text-xs text-slate-500 text-center">Senior Librarian</p>
                         </div>
                         <div className="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-amber-500 font-bold">
-                            A
+                            <Link href="/profile">
+                                A
+                            </Link>
                         </div>
                     </div>
                 </header>

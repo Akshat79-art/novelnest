@@ -17,7 +17,7 @@ const navItems = [
 export default function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
 
     return (
-        <aside className={`${isCollapsed ? 'w-20' : 'w-64'} border-r border-slate-800 bg-slate-900 shadow-xl transition-all duration-300 flex flex-col p-4 fixed h-full z-50`}>
+        <aside className={`${isCollapsed ? 'w-20' : 'w-64'} border-r border-b border-t border-slate-400 bg-slate-900 shadow-xl transition-all duration-300 flex flex-col p-4 fixed h-full z-50`}>
 
             {/* Toggle Button & Logo */}
             <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} mb-10 px-2`}>
