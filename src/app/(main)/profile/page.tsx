@@ -1,5 +1,9 @@
 "use client"
+
 import { useState } from 'react';
+import GeneralSettings from '@/components/profile/GeneralSettings';
+import RentalHistory from '@/components/profile/RentalHistory';
+import SecuritySettings from '@/components/profile/SecuritySettings';
 
 export default function ProfilePage() {
     const [activeTab, setActiveTab] = useState('general');
@@ -31,10 +35,10 @@ export default function ProfilePage() {
             </div>
 
             {/* 75% - The Content Area */}
-            <div className="w-3/4 bg-slate-800/40 border border-slate-700/50 rounded-3xl p-8 backdrop-blur-sm shadow-xl">
-                {/* {activeTab === 'general' && <GeneralSettings />}
+            <div className="w-full bg-slate-800/40 border border-slate-700/50 rounded-3xl p-8 backdrop-blur-sm shadow-xl">
+                {activeTab === 'general' && <GeneralSettings />}
                 {activeTab === 'history' && <RentalHistory />}
-                {activeTab === 'safety' && <SecuritySettings />} */}
+                {activeTab === 'safety' && <SecuritySettings />}
             </div>
         </div>
     );
