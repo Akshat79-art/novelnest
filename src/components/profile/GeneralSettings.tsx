@@ -1,9 +1,67 @@
 "use client"
 
-import React, { useState } from 'react';
+import { authClient } from '@/lib/auth';
+import React, { useState, useEffect } from 'react';
 
 export default function GeneralSettings() {
-    const [genres] = useState(['Fantasy', 'Classic', 'Mystery', 'History', 'Philosophy']);
+    const [genres] = useState(['Fantasy', 'Classic', 'Mystery', 'History', 'Philosophy']);  // To be removed later
+    const [profileData, setProfileData] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const getProfileData = async () => {
+        try {
+            const session = await authClient.getSession();
+            if (!session) {
+                return;
+            }
+
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/profile`);
+            const data = await response.json();
+            setProfileData(data);
+        } catch (error) {
+            console.error('Error fetching profile data:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        getProfileData();
+    }, []);
+
+    function rentalStatusWidget({ status, bookTitle }: { status: string, bookTitle: string }) {
+        return (
+            <div className="group relative flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 cursor-help transition-all hover:bg-amber-500/20">
+                {/* Animated Icon */}
+                <span className={`text-xs ${status === 'In Transit' ? 'animate-bounce' : ''}`}>
+                    {status === 'In Transit' ? '🦉' : '📖'}
+                </span>
+                <span className="text-[10px] font-bold text-amber-500 uppercase tracking-tighter">
+                    {status}
+                </span>
+                {/* Hover Tooltip */}
+                <div className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-48 p-4 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl opacity-0 group-hover:opacity-100 transition-all pointer-events-none translate-y-2 group-hover:translate-y-0 z-50">
+                    <p className="text-[10px] text-slate-500 uppercase font-bold mb-2">Adventure Status</p>
+                    <div className="space-y-3">
+                        <p className="text-xs font-bold text-slate-200">{bookTitle}</p>
+                        {/* Visual Journey Path */}
+                        <div className="flex items-center justify-between relative mt-4">
+                            <div className="absolute h-[1px] w-full bg-slate-800 top-1/2 -translate-y-1/2"></div>
+                            <div className="w-2 h-2 rounded-full bg-amber-500 relative z-10 shadow-[0_0_8px_rgba(245,158,11,0.5)]"></div>
+                            <div className={`w-3 h-3 text-sm relative z-10 transition-all duration-1000 ${status === 'In Transit' ? 'translate-x-[-10px]' : 'translate-x-[40px]'}`}>🦉</div>
+                            <div className={`w-2 h-2 rounded-full relative z-10 ${status === 'Delivered' ? 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]' : 'bg-slate-700'}`}></div>
+                        </div>
+                        <p className="text-[9px] italic text-slate-400 text-center">
+                            {status === 'In Transit' ? 'The owl is crossing the misty mountains...' : 'The owl has landed in your nest.'}
+                        </p>
+                    </div>
+                    {/* Tooltip Arrow */}
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-900"></div>
+                </div>
+            </div>
+        );
+    }
+
 
     return (
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
