@@ -16,8 +16,8 @@ export default function ProfilePage() {
 
     return (
         <div className="flex gap-8 max-w-6xl mx-auto py-10">
-            {/* 25% - The Index Sidebar */}
-            <div className="w-1/4 space-y-2">
+
+            <div className="w-1/4 sticky top-0 space-y-2">
                 <h1 className="text-2xl font-bold mb-6 text-slate-100">Profile</h1>
                 {tabs.map(tab => (
                     <button
@@ -34,7 +34,6 @@ export default function ProfilePage() {
                 ))}
             </div>
 
-            {/* 75% - The Content Area */}
             <div className="w-full bg-slate-800/40 border border-slate-700/50 rounded-3xl p-8 backdrop-blur-sm shadow-xl">
                 {activeTab === 'general' && <GeneralSettings />}
                 {activeTab === 'history' && <RentalHistory />}

@@ -8,7 +8,7 @@ userRouter.post('/register', userController.registerUserController);
 userRouter.post('/complete-profile', requireAuth, requireCompleteProfile, userController.createProfileController);
 userRouter.post('/login', userController.signInController);
 userRouter.post('/logout', userController.signOutController)
-// userRouter.get('/me', requireAuth, userController.getProfile);
+userRouter.get('/me', requireAuth, userController.getProfileController);
 // userRouter.put('/me', requireAuth, userController.updateProfile);
 // userRouter.delete('/me', requireAuth, userController.deleteProfile);
 // userRouter.post('/me/complete', requireAuth, userController.getProfile);

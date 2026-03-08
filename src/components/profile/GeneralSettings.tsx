@@ -15,8 +15,9 @@ export default function GeneralSettings() {
                 return;
             }
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/profile`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/me`);
             const data = await response.json();
+            console.log(data);
             setProfileData(data);
         } catch (error) {
             console.error('Error fetching profile data:', error);
