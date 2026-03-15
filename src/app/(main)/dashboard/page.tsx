@@ -1,11 +1,23 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function Dashboard() {
 
     const [activeTab, setActiveTab] = useState('library');
+
+    const [books, setBooks] = useState([])
+
+    useEffect(() => {
+        const fetchBooks = async () => {
+            const response = await fetch(`http://localhost:3001/api/books`);
+            const data = await response.json();
+            const reqdData = data.slice(0, 4);
+            setBooks(reqdData);
+        };
+        fetchBooks();
+    }, []);
 
     const mockBooks = [
         { id: 1, title: "The Great Gatsby", author: "F. Scott Fitzgerald", category: "Classic", cover: "bg-amber-900/40" },
@@ -66,13 +78,15 @@ export default function Dashboard() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {mockBooks.map((book) => (
+                        {books.map((book) => (
                             <div key={book.id} className="bg-slate-800/30 border border-slate-700/40 rounded-2xl p-4 hover:border-amber-500/30 transition-all hover:-translate-y-1 group cursor-pointer">
-                                <div className={`aspect-[3/4] ${book.cover} rounded-xl mb-4 shadow-xl overflow-hidden flex items-center justify-center group-hover:scale-[1.02] transition-transform`}>
-                                    <span className="text-4xl opacity-20 group-hover:opacity-40 transition-opacity">📖</span>
+                                <div className={`aspect - [3 / 4] ${book.coverImage} rounded - xl mb - 4 shadow - xl overflow - hidden flex items - center justify - center group - hover: scale - [1.02] transition - transform`}>
+                                    <span className="text-4xl opacity-20 group-hover:opacity-40 transition-opacity">
+                                        <img src={book.coverImage} alt={book.title} />
+                                    </span>
                                 </div>
                                 <div className="space-y-1">
-                                    <span className="text-[10px] uppercase tracking-widest text-amber-500/80 font-bold">{book.category}</span>
+                                    <span className="text-[10px] uppercase tracking-widest text-amber-500/80 font-bold">{book.status}</span>
                                     <h4 className="font-bold text-slate-100 truncate">{book.title}</h4>
                                     <p className="text-xs text-slate-500">{book.author}</p>
                                 </div>
