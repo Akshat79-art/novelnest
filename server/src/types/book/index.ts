@@ -1,4 +1,4 @@
-export interface BookUpdateDTO{
+export interface BookUpdateDTO {
     bookId: string,
     newBookStatus: "available" | "rented" | "unavailable"
 };

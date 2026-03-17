@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Book } from '@/types/book';
 
 export default function Dashboard() {
 
     const [activeTab, setActiveTab] = useState('library');
 
-    const [books, setBooks] = useState([])
+    const [books, setBooks] = useState<Book[]>([])
 
     useEffect(() => {
         const fetchBooks = async () => {
