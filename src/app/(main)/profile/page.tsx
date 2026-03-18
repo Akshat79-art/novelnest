@@ -15,6 +15,19 @@ export default function ProfilePage() {
 
     return (
         <div className="flex gap-10 max-w-7xl mx-auto py-12 px-6 items-start">
+            <style>{`
+                @keyframes pageFlip {
+                    0% { transform: rotateY(0deg); }
+                    100% { transform: rotateY(-180deg); }
+                }
+                @keyframes crossSectionFlip {
+                    0% { transform: rotate(-180deg) scaleX(1); opacity: 0; }
+                    5% { transform: rotate(-180deg) scaleX(1); opacity: 1; }
+                    50% { transform: rotate(-90deg) scaleX(0.75); opacity: 1; }
+                    95% { transform: rotate(0deg) scaleX(1); opacity: 1; }
+                    100% { transform: rotate(0deg) scaleX(1); opacity: 0; }
+                }
+            `}</style>
 
             {/* 25% Modern Sticky Index */}
             <div className="w-1/4 sticky top-12 space-y-8">
@@ -49,9 +62,23 @@ export default function ProfilePage() {
                                     </p>
                                 </div>
 
-                                {/* Active Arrow Indicator */}
+                                {/* Active Book Indicator (Mountain Cross Section) */}
                                 {activeTab === tab.id && (
-                                    <div className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></div>
+                                    <div className="relative w-6 h-6 flex flex-col justify-end items-center shrink-0">
+                                        {/* Left thick stack (curved down to the left) */}
+                                        <div className="absolute right-1/2 bottom-[4px] w-[12px] h-[5px] bg-amber-600 rounded-tl-[100%] rounded-bl-[2px] border-t-[0.5px] border-amber-500/50"></div>
+                                        {/* Right thick stack (curved down to the right) */}
+                                        <div className="absolute left-1/2 bottom-[4px] w-[12px] h-[5px] bg-amber-500 rounded-tr-[100%] rounded-br-[2px] border-t-[0.5px] border-amber-400/50"></div>
+
+                                        {/* Center Spine */}
+                                        <div className="absolute bottom-[2px] w-[2px] h-[7px] bg-amber-800 rounded-t-[1px] z-10 shadow-lg"></div>
+
+                                        {/* Flipping Page */}
+                                        <div
+                                            className="absolute left-1/2 bottom-[8px] w-[12px] h-[1.5px] bg-amber-300 origin-left rounded-r-full z-20"
+                                            style={{ animation: 'crossSectionFlip 2.5s cubic-bezier(0.3, 0, 0.2, 1) infinite' }}
+                                        ></div>
+                                    </div>
                                 )}
                             </div>
                         </button>
