@@ -22,9 +22,7 @@ export default function ProfilePage() {
                 }
                 @keyframes crossSectionFlip {
                     0% { transform: rotate(-180deg) scaleX(1); opacity: 0; }
-                    5% { transform: rotate(-180deg) scaleX(1); opacity: 1; }
                     50% { transform: rotate(-90deg) scaleX(0.75); opacity: 1; }
-                    95% { transform: rotate(0deg) scaleX(1); opacity: 1; }
                     100% { transform: rotate(0deg) scaleX(1); opacity: 0; }
                 }
             `}</style>

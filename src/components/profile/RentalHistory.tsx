@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useState } from 'react';
+import { Rental } from '@/types/rentals';
+import React, { useState, useEffect, useMemo } from 'react';
 
 // Temporary mock data for visualizing the design
 const mockRentals = [
@@ -10,7 +11,39 @@ const mockRentals = [
 ];
 
 export default function RentalHistory() {
+
+    const [rentals, setRentals] = useState<Rental[]>(mockRentals);
     const [filter, setFilter] = useState('All');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [sortedConfig, setSortedConfig] = useState({});
+
+    const fetchRentals = async () => {
+        const response = await fetch('/api/rentals');
+        const data = await response.json();
+        setRentals(data);
+    };
+
+    useEffect(() => {
+        fetchRentals();
+    }, []);
+
+    const displayedRentals = useMemo(() => {
+        let result = [...rentals];
+
+        if (filter !== 'All') {
+            result = result.filter(r => r.status === filter);
+        }
+
+        if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            result = result.filter(r =>
+                r.title.toLowerCase().includes(query)
+            );
+        }
+
+        return result
+
+    }, [rentals, filter, searchQuery])
 
     // Helper for status colors
     const getStatusStyle = (status: string) => {
@@ -39,7 +72,9 @@ export default function RentalHistory() {
                         </svg>
                         <input
                             type="text"
-                            placeholder="Search titles or authors..."
+                            placeholder="Search titles..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full bg-slate-900/50 border border-slate-700 rounded-xl py-2 pl-9 pr-4 text-sm focus:border-amber-500/50 outline-none transition-all"
                         />
                     </div>
@@ -53,8 +88,8 @@ export default function RentalHistory() {
                         key={f}
                         onClick={() => setFilter(f)}
                         className={`px-4 py-1.5 rounded-full border transition-all ${filter === f
-                                ? 'bg-amber-500/10 border-amber-500/50 text-amber-500 font-bold'
-                                : 'border-slate-700 text-slate-400 hover:border-slate-500 hover:text-slate-200'
+                            ? 'bg-amber-500/10 border-amber-500/50 text-amber-500 font-bold'
+                            : 'border-slate-700 text-slate-400 hover:border-slate-500 hover:text-slate-200'
                             }`}
                     >
                         {f}
