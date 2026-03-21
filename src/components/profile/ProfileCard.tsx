@@ -1,12 +1,15 @@
 "use client"
 
 import { authClient } from '@/lib/auth';
+import { User } from '@/types/user';
 import React, { useState, useEffect } from 'react';
 
-export default function GeneralSettings() {
+export default function ProfileCard() {
     const [genres] = useState(['Fantasy', 'Classic', 'Mystery', 'History', 'Philosophy']);  // To be removed later
-    const [profileData, setProfileData] = useState(null);
+    const [profileData, setProfileData] = useState<User>();
     const [loading, setLoading] = useState(true);
+
+
 
     const getProfileData = async () => {
         try {

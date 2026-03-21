@@ -27,8 +27,12 @@ export default function RentalHistory() {
         fetchRentals();
     }, []);
 
+    useEffect(() => {
+        console.log(filter);
+    }, [filter]);
+
     const displayedRentals = useMemo(() => {
-        let result = [...rentals];
+        let result = [...mockRentals];
 
         if (filter !== 'All') {
             result = result.filter(r => r.status === filter);
@@ -41,6 +45,8 @@ export default function RentalHistory() {
             );
         }
 
+        console.log("filter", filter, "searchQuery", searchQuery);
+        console.log(result);
         return result
 
     }, [rentals, filter, searchQuery])
@@ -112,7 +118,7 @@ export default function RentalHistory() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-700/50">
-                            {mockRentals.map((rental) => (
+                            {displayedRentals.map((rental) => (
                                 <tr key={rental.id} className="hover:bg-slate-800/30 transition-colors group">
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-4">
