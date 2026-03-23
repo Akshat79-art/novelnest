@@ -9,8 +9,6 @@ export default function ProfileCard() {
     const [profileData, setProfileData] = useState<User>();
     const [loading, setLoading] = useState(true);
 
-
-
     const getProfileData = async () => {
         try {
             const session = await authClient.getSession();

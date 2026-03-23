@@ -15,7 +15,7 @@ export default function ProfilePage() {
     ];
 
     return (
-        <div className="flex flex-col w-full max-w-7xl mx-auto py-12 px-6 gap-8 items-center">
+        <div className="flex flex-col w-full max-w-7xl mx-auto py-8 px-6 gap-8 items-center">
             <style>{`
                 @keyframes pageFlip {
                     0% { transform: rotateY(0deg); }
@@ -28,24 +28,24 @@ export default function ProfilePage() {
                 }
             `}</style>
 
-            <div className="w-full pb-4 flex flex-col items-center text-center">
+            <div className="w-full pb-3 flex flex-col items-center text-center">
                 <h2 className="text-4xl font-bold text-slate-100 tracking-tight">Profile</h2>
                 <p className="text-amber-500 text-xs uppercase font-bold tracking-widest mt-2">Manage your identity</p>
             </div>
 
-            <nav className="flex flex-wrap md:flex-nowrap justify-center gap-7 w-full">
+            <nav className="flex flex-wrap md:flex-nowrap justify-center gap-8">
                 {tabs.map(tab => (
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`md:flex-1 shrink-0 min-w-[280px] group text-left p-4 rounded-3xl transition-all duration-300 border ${activeTab === tab.id
+                        className={`md:flex-1 shrink-0 min-w-[280px] group text-left p-3 rounded-3xl transition-all duration-300 border ${activeTab === tab.id
                             ? 'bg-amber-500/10 border-amber-500/30 shadow-[0_0_30px_rgba(245,158,11,0.05)]'
                             : 'border-slate-800/50 hover:border-slate-700 bg-slate-900/50 hover:bg-slate-800/40 text-slate-400'
                             }`}
                     >
                         <div className="flex items-center gap-5">
                             {/* Icon with glow for active tab */}
-                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl transition-all 
+                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl transition-all 
                                 ${activeTab === tab.id ? 'bg-amber-500 text-slate-900 shadow-xl shadow-amber-500/20 scale-105' : 'bg-slate-800 group-hover:bg-slate-700 group-hover:scale-105'}`}>
                                 {tab.icon}
                             </div>
@@ -54,7 +54,7 @@ export default function ProfilePage() {
                                 <p className={`font-bold text-lg transition-colors ${activeTab === tab.id ? 'text-amber-500' : 'text-slate-300 group-hover:text-slate-100'}`}>
                                     {tab.label}
                                 </p>
-                                <p className="text-[11px] text-slate-500 font-bold truncate uppercase tracking-widest mt-1">
+                                <p className="text-[10px] text-slate-500 font-bold truncate uppercase tracking-widest mt-1">
                                     {tab.desc}
                                 </p>
                             </div>
